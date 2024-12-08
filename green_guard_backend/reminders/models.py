@@ -1,9 +1,11 @@
 from django.db import models
+from plants.models import Plant  # Import Plant model to associate reminders with plants
 
 class Reminder(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    plant = models.ForeignKey('plants.Plant', on_delete=models.CASCADE)
-    reminder_time = models.TimeField()
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    reminder_time = models.DateTimeField(null=True,blank=True)
+    is_completed = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Reminder for {self.plant.name} - {self.message}"

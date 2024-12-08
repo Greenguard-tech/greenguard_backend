@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import BookingListView
+from .views import BookingListCreateView, BookingRetrieveUpdateDestroyView
 
 urlpatterns = [
-    path('', BookingListView.as_view(), name='booking-list'),
+    path('', BookingListCreateView.as_view(), name='booking-list-create'),  # List and create bookings
+    path('<int:pk>/', BookingRetrieveUpdateDestroyView.as_view(), name='booking-detail'),  # Retrieve, update, or delete a specific booking
 ]

@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import PlantListView
+from .views import PlantListCreateView, PlantRetrieveUpdateDestroyView
 
 urlpatterns = [
-    path('', PlantListView.as_view(), name='plant-list'),
+    path('', PlantListCreateView.as_view(), name='plant-list-create'),
+    path('<int:pk>/', PlantRetrieveUpdateDestroyView.as_view(), name='plant-detail'),
 ]

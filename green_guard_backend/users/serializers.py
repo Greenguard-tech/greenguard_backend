@@ -1,7 +1,36 @@
 from rest_framework import serializers
-from .models import CustomUser
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
-class UserSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+# Serializer for registering a new user
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile_image']
+        model = User
+        fields = ['id', 'username', 'email', 'password']  # Ensure only valid fields are included
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+# Serializer for logging in a user and getting JWT token
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+        
+        return {'user': user}

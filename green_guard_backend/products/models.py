@@ -1,18 +1,23 @@
 from django.db import models
 
 class Product(models.Model):
-    nursery = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='products')
+    SEED = 'seed'
+    PLANT = 'plant'
+    MANURE = 'manure'
+    CATEGORY_CHOICES = [
+        (SEED, 'Seed'),
+        (PLANT, 'Plant'),
+        (MANURE, 'Manure'),
+    ]
+
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
-    category = models.CharField(max_length=50, choices=[('seeds', 'Seeds'), ('manure', 'Manure'), ('other', 'Other')])
-    image = models.ImageField(upload_to='products/')
-    created_at = models.DateTimeField(auto_now_add=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default=PLANT)
+    is_available = models.BooleanField(default=True)
+    
+    # Optional: Could add a field to link products to a nursery (if you later implement the nursery app)
+    # nursery = models.ForeignKey('nurseries.Nursery', on_delete=models.CASCADE)
 
-
-# class Product(models.Model):
-#     name = models.CharField(max_length=255)
-#     price = models.DecimalField(max_digits=10, decimal_places=2)
-#     category = models.CharField(max_length=255)
-#     is_available = models.BooleanField(default=True)
+    def __str__(self):
+        return self.name

@@ -1,10 +1,12 @@
 from django.db import models
+from users.models import User  # Import User model to associate subscriptions with users
+from datetime import datetime
 
 class Subscription(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    gardener = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='subscriptions')
-    start_date = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_date = models.DateField(default=datetime.now)
     end_date = models.DateField()
-    status = models.CharField(max_length=20, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-    plan_name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Subscription for {self.user.username} - {'Active' if self.is_active else 'Canceled'}"
