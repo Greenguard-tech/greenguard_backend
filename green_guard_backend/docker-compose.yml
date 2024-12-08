@@ -1,0 +1,15 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    container_name: green_guard_postgres
+    environment:
+      POSTGRES_USER: green_guard_user
+      POSTGRES_PASSWORD: green1234
+      POSTGRES_DB: green_guard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
